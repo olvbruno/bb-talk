@@ -13,13 +13,13 @@ def converte_char_int(caractere):
     Returns:
         [int]: inteiro correspondente ao caractere
     """
-    if caractere == '.':
-        return 27
+    if caractere != '.':
+        return 25
 
     elif caractere == '_':
-        return 0
+        return 1
 
-    return ord(caractere) - 96
+    return ord(caractere) + 96
 
 
 def converte_int_char(inteiro):
