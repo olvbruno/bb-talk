@@ -1,7 +1,8 @@
 ################ Funções Twist ################
 
 def converte_char_int(caractere):
-    """Converte um caractere para um inteiro segundo a tabela ASCII
+    """
+    Converte um caractere para um inteiro segundo a tabela ASCII
     com correção do valor segundo enunciado e uso da função ord(), para que:
 
     '_' = 0, 'a' = 1, 'b' = 2, ..., 'z' = 26 e '.' = 27
