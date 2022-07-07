@@ -1,4 +1,6 @@
-# Apresentação
+# BB Talk - Git/Versionamento
+
+## Apresentação
 
 * Engenheiro de Dados na Let's Code
 * Entrada na Let's como Cientista de Dados
@@ -91,7 +93,7 @@ $ git config --global user.email bowie@example.com
 Novamente, você precisa fazer isso apenas uma vez se passar a opção `--global`, porque o Git sempre usará essa informação para qualquer coisa que você fizer nesse sistema. Se você quiser substituir isso por um nome ou endereço de e-mail diferente para projetos específicos, poderá executar o comando sem a opção `--global` quando estiver nesse projeto.<br>
 Muitas das ferramentas GUI irão ajudá-lo a fazer isso quando você as executar pela primeira vez.
 
-## Nome padrão de branch
+### Nome padrão de branch
 
 Por padrão, o Git criará uma branch chamada master quando você criar um novo repositório com git init. A partir da versão 2.28 do Git, você pode definir um nome diferente para a branch inicial.
 Para definir main como o nome da ramificação padrão, faça:
@@ -379,14 +381,112 @@ E se você perceber que não deseja manter suas alterações no arquivo README.m
 ```sh
 $ git restore CONTRIBUTING.md
 ```
-
+Agora o arquivo aparece de acordo com a última versão registrada por commit ou como foi clonado.
 
 
 # 7. Repositórios remotos
 
-# 8. GitHub
+## Trabalhando com repositórios remotos
 
-# 9. Git branch
+Para poder colaborar em qualquer projeto Git, você precisa saber como gerenciar seus repositórios remotos. Repositórios remotos são versões do seu projeto que estão hospedadas na Internet ou rede em algum lugar.
+
+Você pode ter vários deles, cada um dos quais geralmente é de somente leitura ou leitura/gravação. Colaborar com outras pessoas envolve gerenciar esses repositórios remotos e enviar e extrair dados de e para eles quando você precisar compartilhar o trabalho. 
+
+ 
+### Mostrando seus repositórios remotos
+
+Para ver quais servidores remotos você configurou, você pode executar o comando `git remote`. Ele lista os nomes abreviados de cada identificador remoto que você especificou. Se você clonou seu repositório, você deve pelo menos ver origin — esse é o nome padrão que o Git dá ao servidor do qual você clonou:
+
+```sh
+$ git clone https://github.com/schacon/ticgit
+
+Cloning into 'ticgit'...
+remote: Reusing existing pack: 1857, done.
+remote: Total 1857 (delta 0), reused 0 (delta 0)
+Receiving objects: 100% (1857/1857), 374.35 KiB | 268.00 KiB/s, done.
+Resolving deltas: 100% (772/772), done.
+Checking connectivity... done.
+$ cd ticgit
+$ git remote
+origin
+```
+ 
+## Adicionando repositórios remotos
+
+Para adicionar um novo repositório Git remoto como um nome abreviado que você pode referenciar facilmente, execute `git remote add <shortname> <url>`:
+
+```sh
+$ git remote
+origin
+$ git remote add teste https://github.com/olvbruno/bb-talk.git
+```
+ 
+# Fetching e Pulling de seus remotos
+
+Para obter dados de seus projetos remotos, você pode executar:
+
+```sh
+$ git fetch <remote>
+```
+
+O comando vai para esse projeto remoto e extrai todos os dados desse projeto remoto que você ainda não possui. Depois de fazer isso, você deve ter referências a todas as ramificações desse remoto, que você pode mesclar ou inspecionar a qualquer momento.
+
+Se você clonar um repositório, o comando adiciona automaticamente esse repositório remoto com o nome “origin”. Portanto, `git fetch origin` busca qualquer novo trabalho que tenha sido enviado para esse servidor desde que você o clonou (ou foi obtido pela última vez). 
+
+**É importante observar que o comando git fetch apenas baixa os dados para o seu repositório local — ele não os mescla automaticamente com nenhum de seus trabalhos ou modifica o que você está trabalhando no momento**. Você precisa mesclá-lo manualmente em seu trabalho quando estiver pronto.
+
+Se sua branch atual estiver configurada para rastrear uma branch remota, você pode usar o comando `git pull` para buscar automaticamente e então mesclar essa branch remota em sua branch atual.
+Este pode ser um fluxo de trabalho mais fácil ou confortável para você; e por padrão, o comando `git clone` configura automaticamente seu branch master local para rastrear o branch master remoto (ou qualquer que seja o nome do branch padrão) no servidor do qual você clonou. A execução do `git pull` geralmente busca dados do servidor do qual você clonou originalmente e automaticamente tenta mesclá-los no código em que você está trabalhando no momento.
+ 
+# Pushing para seus repositórios remotos
+
+Quando você tem seu projeto em um ponto que deseja compartilhar, precisa executar um  push. O comando para isso é simples: `git push <remote> <branch>`. Se você quiser enviar sua branch master para seu servidor de origem (novamente, a clonagem geralmente configura ambos os nomes para você automaticamente), então você pode executar isso para enviar quaisquer commits que você fez de volta para o servidor:
+
+```sh
+$ git push origin master
+```
+Este comando funciona apenas se você clonou de um servidor ao qual você tem acesso de gravação e se ninguém tiver feito push nesse meio tempo. Se você e outra pessoa clonarem ao mesmo tempo e fizerem push e então você enviar, seu push será rejeitado. Você terá que buscar o trabalho deles primeiro e incorporá-lo ao seu antes de poder dar push.
+
+## Inspecionando um remoto
+
+Se você quiser ver mais informações sobre um remoto específico, você pode usar o comando `git remote show <remote>`. Se você executar este comando com um nome abreviado específico, como origin, obterá algo assim:
+```sh
+$ git remote show origin
+* remote origin
+  Fetch URL: https://github.com/schacon/ticgit
+  Push  URL: https://github.com/schacon/ticgit
+  HEAD branch: master
+  Remote branches:
+    master                               tracked
+    dev-branch                           tracked
+  Local branch configured for 'git pull':
+    master merges with remote master
+  Local ref configured for 'git push':
+    master pushes to master (up to date)
+```
+Ele lista a URL do repositório remoto, bem como as informações da branch. O comando informa que, se você estiver na branch master e executar o git pull, ele mesclará automaticamente a branch master do remoto no local depois que ele for buscado. Ele também lista todas as referências remotas que retirou.
+
+## Renomeando e removendo remotos
+
+Você pode executar `git remote rename` para alterar o nome abreviado de um controle remoto. Por exemplo, se você quiser renomear origin para exemplo, você pode fazê-lo com `git remote rename`:
+```sh
+$ git remote rename teste exemplo
+$ git remote
+exemplo
+```
+
+Se você deseja remover um controle remoto por algum motivo — você moveu o servidor ou não está mais usando um espelho específico, ou talvez um colaborador não esteja mais contribuindo — você pode usar `git remote remove` ou `git remote rm`:
+
+```sh
+$ git remote remove exemplo
+$ git remote
+origin
+```
+
+Depois de excluir a referência a um remoto dessa maneira, todas as ramificações de rastreamento remoto e as definições de configuração associadas a esse remoto também serão excluídas.
+
+
+# . Git branch
 
 # 10. Merging branches
 
