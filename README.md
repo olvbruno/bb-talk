@@ -3,6 +3,7 @@ Para mais informações, entre em nossa comunidade se inscrevendo em nosso [site
 
 ## python-challenge1
 
+
 O primeiro desafio é aplicação do **Método Twist** para codificação e decodificação de mensagens. Mais informações em `Challenge_Dados_-_Fevereiro.pdf`
 
 `nb_challenge1_python.ipynb`: notebook com enunciado e solução passo a passo.<br>
